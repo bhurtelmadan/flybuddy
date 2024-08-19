@@ -10,13 +10,13 @@ import LoggedInHomePage from './LoggedInHomePage';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-     <Router>
-    <AuthProvider>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/dashboard" element={<LoggedInHomePage />} />
-      </Routes>
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/dashboard" element={<LoggedInHomePage />} />
+        </Routes>
+      </AuthProvider>
     </Router>
 
     {/* <App /> */}
