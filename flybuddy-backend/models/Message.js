@@ -11,6 +11,9 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-});
+    date: { type: Date },
+    from: { type: String },
+    to: { type: String },
+}, { timestamps: true });
 
 module.exports = mongoose.model('Message', messageSchema);

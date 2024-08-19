@@ -1,19 +1,45 @@
 import React, { useState } from "react";
 import { Calendar, MapPin, MessageSquare, Plane } from "lucide-react";
-import { sendMessage } from "../api";
+import { sendMessage, updateFlight, deleteFlight } from "../api";
 import MessagePopup from "./MessagePopup";
+import AddFlightForm from "./AddFlightForm";
 
-const FlightCard = ({ flight, showConnect = true }) => {
+const FlightCard = ({ flight, showConnect = true, getAllFlight = null }) => {
     const [isMessagePopupOpen, setIsMessagePopupOpen] = useState(false);
-    
+    const [showEditForm, setShowEditForm] = useState(false);
+
     const handleSendMessage = async (message) => {
-            try {
-                await sendMessage({ receiverUserId: flight.userId, message });
-                setIsMessagePopupOpen(false);
-            } catch (error) {
-                console.error('Error sending message:', error);
-                // Handle error (e.g., show error message to user)
+        try {
+            await sendMessage({ receiverUserId: flight.userId, message });
+            setIsMessagePopupOpen(false);
+        } catch (error) {
+            console.error('Error sending message:', error);
+            // Handle error (e.g., show error message to user)
+        }
+    };
+
+
+    const handleUpdateFlight = async (flightDetails) => {
+        try {
+            await updateFlight(flight._id, flightDetails);
+            await getAllFlight();
+            setShowEditForm(false);
+        } catch (error) {
+            console.error("Failed to update flight:", error);
+        }
+    };
+
+    const handleDeleteFlight = async () => {
+        try {
+            if (window.confirm('Are you sure you want to delete this flight?')) {
+                await deleteFlight(flight._id);
+                await getAllFlight();
+            } else {
+                // Do nothing!
             }
+        } catch (error) {
+            console.error("Failed to delete flight:", error);
+        }
     };
 
     return (
@@ -44,7 +70,7 @@ const FlightCard = ({ flight, showConnect = true }) => {
                 {flight.status === 'seeking' && flight.additionalInfo && (
                     <p className="text-sm text-gray-600 mb-4">Info: {flight.additionalInfo}</p>
                 )}
-                {showConnect && (
+                {showConnect ? (
                     <button
                         onClick={() => setIsMessagePopupOpen(true)}
                         className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out flex items-center justify-center"
@@ -52,7 +78,30 @@ const FlightCard = ({ flight, showConnect = true }) => {
                         <MessageSquare className="w-4 h-4 mr-2" />
                         Connect
                     </button>
+                ) : <div className="flex">
+                    <button
+                        onClick={() => setShowEditForm(true)}
+                        className="w-full bg-green-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out flex items-center justify-center"
+                    >
+                        Edit
+                    </button>
+                    <button
+                        onClick={handleDeleteFlight}
+                        className="w-full bg-red-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out flex items-center justify-center"
+                    >
+                        Delete
+                    </button>
+                </div>}
+
+                {showEditForm && (
+                    <AddFlightForm
+                        title="Update Your Flight"
+                        onClose={() => setShowEditForm(false)}
+                        onAddFlight={handleUpdateFlight}
+                        defaultData={flight}
+                    />
                 )}
+
                 <MessagePopup
                     isOpen={isMessagePopupOpen}
                     onClose={() => setIsMessagePopupOpen(false)}
