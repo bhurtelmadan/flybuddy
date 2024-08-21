@@ -1,4 +1,4 @@
-export const API_URL = 'http://localhost:5000/api';
+export const API_URL = 'http://localhost:5005/api';
 
 export const signup = async (userData) => {
     const response = await fetch(`${API_URL}/users/signup`, {
