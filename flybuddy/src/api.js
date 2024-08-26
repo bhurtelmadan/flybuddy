@@ -1,4 +1,6 @@
-export const API_URL = 'http://localhost:5000/api';
+// export const API_URL = 'http://localhost:5000/api';
+export const API_URL = 'https://flybuddy-backend-q1q98r9iy-bhurtelmadans-projects.vercel.app/api';
+
 
 export const signup = async (userData) => {
     const response = await fetch(`${API_URL}/users/signup`, {
