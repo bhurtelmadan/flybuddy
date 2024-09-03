@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         const response = await fetch(`${API_URL}/users/login`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify(credentials),
         });
 
